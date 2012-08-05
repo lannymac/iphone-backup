@@ -28,31 +28,32 @@ def todatenum(d):
 
 try:
     smsdb=pickle.load(open("sms_database.p","rb"))
-    database='y'
+    databaseq='y'
 except:
-    database='n'
+    databaseq='n'
+
 
 os.system("cp /Users/"+getuser()+"/Library/Application\ Support/MobileSync/Backup/3a09e92209b9e3cd0520ef7ecd4373bb55db1c2d/3d0d7e5fb2ce288813306e4d4636395e047a3d28 /Users/landan/Documents/Texts_from_orrin/sms.db")
-smsDB = sqlite3.connect('sms.db')
+smsDB = sqlite3.connect('/Users/'+getuser()+'/Documents/Texts_from_orrin/sms.db')
 with smsDB:
     cur = smsDB.cursor()
     cur.execute("SELECT * FROM message")
 
     sms = cur. fetchall()
 
-sms_orrin=[]
+sms_database=[]
 for i in range(len(sms)):
     if sms[i][1]==u'+19028800158' or sms[i][1]==u'+15064800006':
-        sms_orrin.append(sms[i])
-orrin=[]
+        sms_database.append(sms[i])
+database=[]
 
-for i in range(len(sms_orrin)):
-    if sms_orrin[i][4]==3:
+for i in range(len(sms_database)):
+    if sms_database[i][4]==3:
         sentby='Landan'
-    elif sms_orrin[i][4]==2:
+    elif sms_database[i][4]==2:
         sentby='Orrin'
-    text=sms_orrin[i][3]
-    date=str(sms_orrin[i][2])
+    text=sms_database[i][3]
+    date=str(sms_database[i][2])
     dt=datetime.fromtimestamp(int(date))
     ds=dt.strftime("%Y-%m-%d %H:%M:%S")
     date=ds.decode('utf-8')
@@ -68,26 +69,29 @@ for i in range(len(sms_orrin)):
     datedt=todatenum(datetime(year,month,day,hour,minute,sec))
 
     tempdict={"date":str(date),"datetime":datedt,"Sent By":sentby,"text":text}
-    orrin.append(tempdict)
+    database.append(tempdict)
 
 times=[]
-for i in range(len(orrin)):
-    times.append(orrin[i]["datetime"])
-if database=='y':
+for i in range(len(database)):
+    times.append(database[i]["datetime"])
+if databaseq=='y':
     newtime=0
     for i in range(len(smsdb)):
         temptime=smsdb[i]["datetime"]
         if temptime>newtime:
             newtime=temptime
 
-    for i in range(len(orrin)):
-        if orrin[i]["datetime"]>newtime:
-            smsdb.append(orrin[i])
+    for i in range(len(database)):
+        if database[i]["datetime"]>newtime:
+            smsdb.append(database[i])
 
     smsdb=smsclass(smsdb)
     pickle.dump(smsdb,open("/Users/landan/Documents/Texts_from_orrin/sms_database.p",'wb'))
 
-if database=='n':
-    pickle.dump(orrin,open("/Users/landan/Documents/Texts_from_orrin/sms_database.p",'wb'))
+if databaseq=='n':
+    pickle.dump(database,open("/Users/landan/Documents/Texts_from_orrin/sms_database.p",'wb'))
+
+
+
 
 
