@@ -14,7 +14,7 @@ import sms as smsclass
 from getpass import getuser
 import pickle
 from sms import sms as smsclass
-
+import Tkinter, tkFileDialog
 
 
 
@@ -26,15 +26,27 @@ def todatenum(d):
     dn=d1+d2
     return dn
 
-try:
-    smsdb=pickle.load(open("sms_database.p","rb"))
+q1=raw_input("Would you like to open and append to a previously loaded database?  ")
+if q1=='y':
+    q1a=raw_input("Enter the location of this file:\n")
+    smsdb=pickle.load(open(q1a,"rb"))
     databaseq='y'
-except:
+if q1=='n':
     databaseq='n'
 
 
-os.system("cp /Users/"+getuser()+"/Library/Application\ Support/MobileSync/Backup/3a09e92209b9e3cd0520ef7ecd4373bb55db1c2d/3d0d7e5fb2ce288813306e4d4636395e047a3d28 /Users/landan/Documents/Texts_from_orrin/sms.db")
-smsDB = sqlite3.connect('/Users/'+getuser()+'/Documents/Texts_from_orrin/sms.db')
+backupdirs=[name for name in os.listdir("/Users/"+getuser()+"/Library/Application Support/MobileSync/Backup/")]
+for i in range(len(backupdirs)):
+    print(str(i)+" - "+backupdirs[i])
+
+q3=raw_input("Enter the number corresponding to the backup folder you would like to use:  ")
+try:
+    os.system("mkdir DataBaseFiles")
+except:
+    pass
+os.system("cp /Users/"+getuser()+"/Library/Application Support/MobileSync/Backup"+backupdirs[int(q3)]+"/3d0d7e5fb2ce288813306e4d4636395e047a3d28 DataBaseFiles/sms.db")
+smsDB= sqlite3.connect("DataBaseFiles/sms.db")
+
 with smsDB:
     cur = smsDB.cursor()
     cur.execute("SELECT * FROM message")
@@ -86,12 +98,11 @@ if databaseq=='y':
             smsdb.append(database[i])
 
     smsdb=smsclass(smsdb)
-    pickle.dump(smsdb,open("/Users/landan/Documents/Texts_from_orrin/sms_database.p",'wb'))
+    
 
 if databaseq=='n':
-    pickle.dump(database,open("/Users/landan/Documents/Texts_from_orrin/sms_database.p",'wb'))
+    smsdb=smsclass(database)
 
-
-
-
+q2=raw_input("Enter the location where you would like the database file pickled:\n")
+pickle.dump(smsdb,open(q2,'wb'))
 
