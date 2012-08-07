@@ -11,6 +11,9 @@ import sms
 
 class sms(list):
 
+    def name(self,i):
+        print(self[i]["Contact"])
+
     def text(self,i):
         print(self[i]["Text"])
 
@@ -24,8 +27,13 @@ class sms(list):
         print(self[i]["Datetime"])
 
     def all(self,i):
-        print("Seny by: "+self[i]["Sent By"]+" on "+str(self[i]["date"])+"\n")
-        print(self[i]["text"])
+        if self[i]["sr"]=="Sent":
+            print("Seny by: YOU"+"\n"+"Received by: "+str(self[i]["Contact"])+" on "+str(self[i]["Date"])+"\n")
+            print(self[i]["Text"])
+
+        elif self[i]["sr"]=="Received":
+            print("Seny by: "+str(self[i]["Contact"])+"\n"+"Received by: YOU"+" on "+str(self[i]["Date"])+"\n")
+            print(self[i]["Text"])
 
     def daytext(self):
         from datetime import datetime
@@ -53,7 +61,7 @@ class sms(list):
         time=[]
         count=[]
         for i in range(len(self)):
-            time.append(int(self[i]["datetime"]))
+            time.append(int(self[i]["Datetime"]))
 
         timedict=Counter(time)
         time=list(timedict)
@@ -73,10 +81,10 @@ class sms(list):
         reccount=[]
 
         for i in range(len(self)):
-            if self[i]["Sent By"]=="Landan":
-                senttime.append(int(self[i]["datetime"]))
-            if self[i]["Sent By"]=="Orrin":
-                rectime.append(int(self[i]["datetime"]))
+            if self[i]["sr"]=="Sent":
+                senttime.append(int(self[i]["Datetime"]))
+            if self[i]["sr"]=="Received":
+                rectime.append(int(self[i]["Datetime"]))
 
         senttimedict=Counter(senttime)
         rectimedict=Counter(rectime)
@@ -101,7 +109,7 @@ class sms(list):
         time=[]
         count=[]
         for i in range(len(self)):
-            time.append(int(self[i]["datetime"]))
+            time.append(int(self[i]["Datetime"]))
         timedict=Counter(time)
         time=list(timedict)
         senttime=[]
@@ -110,10 +118,10 @@ class sms(list):
         reccount=[]
 
         for i in range(len(self)):
-            if self[i]["Sent By"]=="Landan":
-                senttime.append(int(self[i]["datetime"]))
-            if self[i]["Sent By"]=="Orrin":
-                rectime.append(int(self[i]["datetime"]))
+            if self[i]["sr"]=="Sent":
+                senttime.append(int(self[i]["Datetime"]))
+            if self[i]["sr"]=="Received":
+                rectime.append(int(self[i]["Datetime"]))
 
         senttimedict=Counter(senttime)
         rectimedict=Counter(rectime)
@@ -137,7 +145,7 @@ class sms(list):
             hourcount.append(0)
 
         for i in range(len(self)):
-            temphour=int(self[i]["date"][11:13])
+            temphour=int(self[i]["Date"][11:13])
             hourcount[temphour]=hourcount[temphour]+1
 
 
@@ -157,7 +165,7 @@ class sms(list):
             monthcount.append(0)
 
         for i in range(len(self)):
-            tempmonth=int(self[i]["date"][5:7])
+            tempmonth=int(self[i]["Date"][5:7])
             monthcount[tempmonth-1]=monthcount[tempmonth-1]+1
 
 
@@ -182,8 +190,8 @@ class sms(list):
             count=[]
             for i in range(len(self)):
                 findnum=0
-                day=int(self[i]["datetime"])
-                string=copy.deepcopy(self[i]["text"])
+                day=int(self[i]["Datetime"])
+                string=copy.deepcopy(self[i]["Text"])
                 
 
                 while 1:
@@ -203,7 +211,7 @@ class sms(list):
                 count.append(daydict[i])
 
 
-            print("Average frequency of the word "+word.upper()+" used per day: "+str(round(sum(count)/float(self[-1]["datetime"]-self[0]["datetime"]),2)))
+            print("Average frequency of the word "+word.upper()+" used per day: "+str(round(sum(count)/float(self[-1]["Datetime"]-self[0]["Datetime"]),2)))
             pl.figure()
             pl.plot(day,count)
             pl.show()
