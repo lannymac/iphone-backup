@@ -14,7 +14,7 @@ import sms as smsclass
 from getpass import getuser
 import pickle
 from sms import sms as smsclass
-import Tkinter, tkFileDialog
+import re
 
 
 
@@ -25,6 +25,15 @@ def todatenum(d):
     d2=(d.hour+(d.minute+d.second/60.)/60.)/24.
     dn=d1+d2
     return dn
+
+def searchchar(string,char):
+    output=False
+    if string != None:
+        for i in range(len(string)):
+            if string[i]==char:
+                output=True
+    return output
+            
 
 q1=raw_input("Would you like to open and append to a previously loaded database?  ")
 if q1=='y':
@@ -40,11 +49,8 @@ for i in range(len(backupdirs)):
     print(str(i)+" - "+backupdirs[i])
 
 q3=raw_input("Enter the number corresponding to the backup folder you would like to use:  ")
-try:
-    os.system("mkdir DataBaseFiles")
-except:
-    pass
-os.system("cp /Users/"+getuser()+"/Library/Application Support/MobileSync/Backup"+backupdirs[int(q3)]+"/3d0d7e5fb2ce288813306e4d4636395e047a3d28 DataBaseFiles/sms.db")
+
+#os.system("cp /Users/landan/Library/Application\ Support/MobileSync/Backup"+backupdirs[int(q3)]+"/3d0d7e5fb2ce288813306e4d4636395e047a3d28 ~/code/iphone-backup/DataBaseFiles/sms.db")
 smsDB= sqlite3.connect("DataBaseFiles/sms.db")
 
 with smsDB:
@@ -53,55 +59,121 @@ with smsDB:
 
     sms = cur. fetchall()
 
+        
+#####READ IN ADDRESS BOOK######
+#os.system("cp /Users/landan/Library/Application\ Support/MobileSync/Backup"+backupdirs[int(q3)]+"/31bb7ba8914766d4ba40d6dfb6113c8b614be442 ~/Desktop/contacts.db")
+
+Addy=sqlite3.connect("DataBaseFiles/contacts.db")
+with Addy:
+    cur = Addy.cursor()
+    cur.execute("SELECT * FROM ABPerson")
+    
+    address = cur.fetchall()
+contacts=[]
+for i in range(len(address)):
+    tempdict={"ROWID":address[i][0],"First":address[i][1],"Last":address[i][2]}
+    contacts.append(tempdict)
+
+with Addy:
+    cur.execute("SELECT * FROM ABMultiValue")
+    phonenums=cur.fetchall()
+
+addresses=[]
+for i in range(len(phonenums)):
+    tempdict={"ROWID":phonenums[i][1],"Address":phonenums[i][5]}
+    addresses.append(tempdict)
+
+for i in range(len(contacts)):
+    contacts[i]["Address"]=[]
+
+for i in range(len(addresses)):
+    tempID=addresses[i]["ROWID"]
+    for j in range(len(contacts)):
+        if tempID==contacts[j]["ROWID"]:
+            contacts[j]["Address"].append(addresses[i]["Address"])
+
+for i in range(len(contacts)):
+    for j in range(len(contacts[i]["Address"])):
+        tempstring=contacts[i]["Address"][j]
+        try:
+            tempstring=re.sub("[^0-9]","",tempstring)
+            if tempstring[0] != u'1':
+                tempstring=u'1'+tempstring
+            tempstring=u'+'+tempstring
+            contacts[i]["Address"][j]=tempstring
+        except:
+            pass
+
+
+##############################
+
+
 sms_database=[]
 for i in range(len(sms)):
-    if sms[i][1]==u'+19028800158' or sms[i][1]==u'+15064800006':
-        sms_database.append(sms[i])
-database=[]
+    if sms[i][4]==2 or sms[i][4]==3:
+        tempnum=sms[i][1]
+        try:
+            tempnum=re.sub("[^0-9]","",tempnum)
+            if tempnum[0] != u'1':
+                tempnum=u'1'+tempnum
+            tempnum=u'+'+tempnum
+        except:
+            pass
 
-for i in range(len(sms_database)):
-    if sms_database[i][4]==3:
-        sentby='Landan'
-    elif sms_database[i][4]==2:
-        sentby='Orrin'
-    text=sms_database[i][3]
-    date=str(sms_database[i][2])
-    dt=datetime.fromtimestamp(int(date))
-    ds=dt.strftime("%Y-%m-%d %H:%M:%S")
-    date=ds.decode('utf-8')
+        for j in range(len(contacts)):
+            for k in range(len(contacts[j]["Address"])):
+                if tempnum==contacts[j]["Address"][k]:
+                    if contacts[j]["Last"] != None:
+                        tempname=contacts[j]["First"]+u' '+contacts[j]["Last"]
+                    elif contacts[j]["Last"] == None:
+                        tempname=contacts[j]["First"]
+                elif tempnum==None:
+                    tempname=None
+        if sms[i][4]==3:
+            sr="Sent"
+        elif sms[i][4]==2:
+            sr="Received"
+        date=str(sms[i][2])
+        dt=datetime.fromtimestamp(int(date))
+        ds=dt.strftime("%Y-%m-%d %H:%M:%S")
+        date=ds.decode('utf-8')
 
 
-    year=int(date[0:4])
-    month=int(date[5:7])
-    day=int(date[8:10])
-    hour=int(date[11:13])
-    minute=int(date[14:16])
-    sec=int(date[17:19])
+        year=int(date[0:4])
+        month=int(date[5:7])
+        day=int(date[8:10])
+        hour=int(date[11:13])
+        minute=int(date[14:16])
+        sec=int(date[17:19])
 
-    datedt=todatenum(datetime(year,month,day,hour,minute,sec))
+        datedt=todatenum(datetime(year,month,day,hour,minute,sec))
 
-    tempdict={"date":str(date),"datetime":datedt,"Sent By":sentby,"text":text}
-    database.append(tempdict)
+        
+        try:
+            tempdict={"Text":sms[i][3],"Date":date,"Contact":tempname,"Address":tempnum,"sr":sr,"Datetime":datedt}
+        except:
+             tempdict={"Text":sms[i][3],"Date":date,"Contact":None,"Address":sms[i][1],"sr":sr,"Datetime":datedt}
 
-times=[]
-for i in range(len(database)):
-    times.append(database[i]["datetime"])
+        sms_database.append(tempdict)
+
+
+
 if databaseq=='y':
     newtime=0
     for i in range(len(smsdb)):
-        temptime=smsdb[i]["datetime"]
+        temptime=smsdb[i]["Datetime"]
         if temptime>newtime:
             newtime=temptime
 
-    for i in range(len(database)):
-        if database[i]["datetime"]>newtime:
-            smsdb.append(database[i])
+    for i in range(len(sms_database)):
+        if sms_database[i]["Datetime"]>newtime:
+            smsdb.append(sms_database[i])
 
     smsdb=smsclass(smsdb)
     
 
 if databaseq=='n':
-    smsdb=smsclass(database)
+    smsdb=smsclass(sms_database)
 
 q2=raw_input("Enter the location where you would like the database file pickled:\n")
 pickle.dump(smsdb,open(q2,'wb'))
