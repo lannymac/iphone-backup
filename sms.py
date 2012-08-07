@@ -12,16 +12,16 @@ import sms
 class sms(list):
 
     def text(self,i):
-        print(self[i]["text"])
+        print(self[i]["Text"])
 
     def date(self,i):
-        print(self[i]["date"])
+        print(self[i]["Date"])
         
-    def sentby(self,i):
-        print(self[i]["Sent By"])
+    def sr(self,i):
+        print(self[i]["sr"])
 
     def dt(self,i):
-        print(self[i]["datetime"])
+        print(self[i]["Datetime"])
 
     def all(self,i):
         print("Seny by: "+self[i]["Sent By"]+" on "+str(self[i]["date"])+"\n")
