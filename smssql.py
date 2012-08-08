@@ -155,7 +155,57 @@ for i in range(len(sms)):
              tempdict={"Text":sms[i][3],"Date":date,"Contact":None,"Address":sms[i][1],"sr":sr,"Datetime":datedt}
 
         sms_database.append(tempdict)
+########
+    elif sms[i][4]==0:
+        tempnum=sms[i][18]
+        try:
+            tempnum=re.sub("[^0-9]","",tempnum)
+            if tempnum[0] != u'1':
+                tempnum=u'1'+tempnum
+            tempnum=u'+'+tempnum
+        except:
+            pass
 
+        for j in range(len(contacts)):
+            for k in range(len(contacts[j]["Address"])):
+                if tempnum==contacts[j]["Address"][k]:
+                    if contacts[j]["Last"] != None:
+                        tempname=contacts[j]["First"]+u' '+contacts[j]["Last"]
+                    elif contacts[j]["Last"] == None:
+                        tempname=contacts[j]["First"]
+                elif tempnum==None:
+                    tempname=None
+        if sms[i][26]==36869 or sms[i][26]==102405:
+            sr="Sent"
+        elif sms[i][26]==12289 or sms[i][26]==77825:
+            sr="Received"
+        if sms[i][31]==0:
+            date=str(int(sms[i][32])+978307200)
+        else:
+            date=str(int(sms[i][31]+978307200))
+        dt=datetime.fromtimestamp(int(date))
+        ds=dt.strftime("%Y-%m-%d %H:%M:%S")
+        date=ds.decode('utf-8')
+
+
+        year=int(date[0:4])
+        month=int(date[5:7])
+        day=int(date[8:10])
+        hour=int(date[11:13])
+        minute=int(date[14:16])
+        sec=int(date[17:19])
+
+        datedt=todatenum(datetime(year,month,day,hour,minute,sec))
+
+        
+        try:
+            tempdict={"Text":sms[i][3],"Date":date,"Contact":tempname,"Address":tempnum,"sr":sr,"Datetime":datedt}
+        except:
+             tempdict={"Text":sms[i][3],"Date":date,"Contact":None,"Address":sms[i][1],"sr":sr,"Datetime":datedt}
+
+        sms_database.append(tempdict)
+
+#######
 
 
 if databaseq=='y':
