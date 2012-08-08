@@ -44,7 +44,7 @@ class sms(list):
         datedt=datetime(year,month,day,0,0,0)
         finaldate=datedt.toordinal()
         
-        for i in range(len(self)):
+        for i in range(1,len(self)):
             if int(self[i]["datetime"])==finaldate:
                 print("Sent by: "+sent[i]["Sent By"]+" at "+str(self[i]["date"][11:])+"\n")
                 print(self[i]["text"])
@@ -54,22 +54,36 @@ class sms(list):
                 
              
     
-    def total(self,contact=None):
+    def total(self,contact=0):
 
         import pylab as pl
         from collections import Counter
         import copy
 
-        if contact!=None:
+        if contact!=0:
+            contacts=[]
+            print("Here is a list of your contacts. Enter the number corresponding to the contact you wish to isolate:  ")
+            for i in range(len(self[0])):
+                if self[0][i]["First"]!=None and self[0][i]["Last"]!=None:
+                    print(str(i)+" - "+self[0][i]["First"]+" "+self[0][i]["Last"])
+                    contacts.append(self[0][i]["First"]+" "+self[0][i]["Last"])
+                elif self[0][i]["First"]==None and self[0][i]["Last"]!=None:
+                    print(str(i)+" - "+self[0][i]["Last"])
+                    contacts.append(self[0][i]["Last"])
+                elif self[0][i]["First"]!=None and self[0][i]["Last"]==None:
+                    print(str(i)+" - "+self[0][i]["First"])
+                    contacts.append(self[0][i]["First"])
+            q=raw_input("Enter a number:  ")
+            print("Showing texts for only "+contacts[int(q)])
             database=[]
-            for i in range(len(self)):
+            for i in range(1,len(self)):
                 try:
-                    if self[i]["Contact"].find(contact)!=-1:
+                    if self[i]["Contact"]==contacts[int(q)]:
                         database.append(copy.deepcopy(self[i]))
                 except:
                     pass
         else:
-            database=copy.deepcopy(self)
+            database=copy.deepcopy(self[1:])
                                   
 
         time=[]
