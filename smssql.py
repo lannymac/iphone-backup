@@ -130,6 +130,7 @@ for i in range(len(contacts)):
 
 
 sms_database=[]
+sms_database.append(contacts)
 for i in range(len(sms)):
     if sms[i][4]==2 or sms[i][4]==3:
         tempnum=sms[i][1]
