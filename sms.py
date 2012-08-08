@@ -109,7 +109,7 @@ class sms(list):
         rectime=[]
         reccount=[]
 
-        for i in range(len(self)):
+        for i in range(1,len(self)):
             if self[i]["sr"]=="Sent":
                 senttime.append(int(self[i]["Datetime"]))
             if self[i]["sr"]=="Received":
@@ -137,7 +137,7 @@ class sms(list):
         from collections import Counter
         time=[]
         count=[]
-        for i in range(len(self)):
+        for i in range(1,len(self)):
             time.append(int(self[i]["Datetime"]))
         timedict=Counter(time)
         time=list(timedict)
@@ -146,7 +146,7 @@ class sms(list):
         rectime=[]
         reccount=[]
 
-        for i in range(len(self)):
+        for i in range(1,len(self)):
             if self[i]["sr"]=="Sent":
                 senttime.append(int(self[i]["Datetime"]))
             if self[i]["sr"]=="Received":
@@ -173,7 +173,7 @@ class sms(list):
         for i in range(len(hours)):
             hourcount.append(0)
 
-        for i in range(len(self)):
+        for i in range(1,len(self)):
             temphour=int(self[i]["Date"][11:13])
             hourcount[temphour]=hourcount[temphour]+1
 
@@ -193,7 +193,7 @@ class sms(list):
         for i in range(len(months)):
             monthcount.append(0)
 
-        for i in range(len(self)):
+        for i in range(1,len(self)):
             tempmonth=int(self[i]["Date"][5:7])
             monthcount[tempmonth-1]=monthcount[tempmonth-1]+1
 
@@ -217,7 +217,7 @@ class sms(list):
         if len(word)>0:
             daycount=[]
             count=[]
-            for i in range(len(self)):
+            for i in range(1,len(self)):
                 findnum=0
                 day=int(self[i]["Datetime"])
                 string=copy.deepcopy(self[i]["Text"])
@@ -249,7 +249,7 @@ class sms(list):
         import codecs
         where=raw_input("Where would you like the exported file saved?  ")
         f=codecs.open(where+"smsoutput.txt","w","utf-8")
-        for i in range(len(self)):
+        for i in range(1,len(self)):
             contact=self[i]["Contact"]
             if contact==None:
                 if self[i]["Address"]!=None:
