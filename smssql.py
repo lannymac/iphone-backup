@@ -43,12 +43,17 @@ if q1=='y':
 if q1=='n':
     databaseq='n'
 
-q5=raw_input("In order for this program to work, you must specify a place where the sms and contact SQL database files will be stored:   ")
+q5=raw_input("In order for this program to work, you must specify a place where\
+ the sms and contact SQL database files will be stored:   ")
 if q5[-1]!="/":
     q5=q5+"/"
 
 print("\n")
-print("You will now be given a choice as to which folder you would like to use to extract the messages. Each folder corresponds to a backup for a particular Apple device. There is no easy way to know which folder is the correct one. Trial and error seems to be the best way to do this. Choose a folder and if it doesn't work, restart the program and try again\n")
+print("You will now be given a choice as to which folder you would like to use to \
+extract the messages. Each folder corresponds to a backup for a particular Apple device. \
+There is no easy way to know which folder is the correct one. Trial and error seems \
+to be the best way to do this. Choose a folder and if it doesn't work, \
+restart the program and try again\n")
 
 
 backupdirs=[name for name in os.listdir("/Users/"+getuser()+"/Library/Application Support/MobileSync/Backup/")]
@@ -64,7 +69,8 @@ for i in range(len(backupdirs)):
 print("\n")
 q3=raw_input("Enter the number corresponding to the backup folder you would like to use:  ")
 
-os.system("cp /Users/landan/Library/Application\ Support/MobileSync/Backup/"+backupdirs[int(q3)]+"/3d0d7e5fb2ce288813306e4d4636395e047a3d28 "+str(q5)+"sms.db")
+os.system("cp /Users/landan/Library/Application\ Support/MobileSync/Backup/"+backupdirs[int(q3)]+\
+"/3d0d7e5fb2ce288813306e4d4636395e047a3d28 "+str(q5)+"sms.db")
 smsDB= sqlite3.connect("DataBaseFiles/sms.db")
 
 with smsDB:
@@ -75,7 +81,8 @@ with smsDB:
 
         
 #####READ IN ADDRESS BOOK######
-os.system("cp /Users/landan/Library/Application\ Support/MobileSync/Backup/"+backupdirs[int(q3)]+"/31bb7ba8914766d4ba40d6dfb6113c8b614be442 "+str(q5)+"contacts.db")
+os.system("cp /Users/landan/Library/Application\ Support/MobileSync/Backup/"+backupdirs[int(q3)]+\
+"/31bb7ba8914766d4ba40d6dfb6113c8b614be442 "+str(q5)+"contacts.db")
 
 Addy=sqlite3.connect("DataBaseFiles/contacts.db")
 with Addy:
@@ -242,5 +249,7 @@ if q4 == 'y':
     q2=raw_input("Enter the location where you would like the database file pickled:\n")
     pickle.dump(smsdb,open(q2,'wb'))
 
-print("\nAlright! You're all done! The variable *smsdb* is the database. You can now perform some neat little functions on it. They are all listed in sms.py. You can used them by doing: smsdb.function()\nAn example would be to try: smsdb.total()")
+print("\nAlright! You're all done! The variable *smsdb* is the database. You can \
+now perform some neat little functions on it. They are all listed in sms.py. You \
+can used them by doing: smsdb.function()\nAn example would be to try: smsdb.total()")
 
