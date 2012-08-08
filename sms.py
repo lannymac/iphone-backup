@@ -35,7 +35,7 @@ class sms(list):
             print("Seny by: "+str(self[i]["Contact"])+"\n"+"Received by: YOU"+" on "+str(self[i]["Date"])+"\n")
             print(self[i]["Text"])
 
-    def daytext(self):
+    def daytext(self,contact=None):            
         from datetime import datetime
         date=raw_input("Enter the date you would like to see the texts (format yyyy,mm,dd):  ")
         year=int(date[0:4])
@@ -46,7 +46,7 @@ class sms(list):
         
         for i in range(len(self)):
             if int(self[i]["datetime"])==finaldate:
-                print("Seny by: "+self[i]["Sent By"]+" at "+str(self[i]["date"][11:])+"\n")
+                print("Sent by: "+sent[i]["Sent By"]+" at "+str(self[i]["date"][11:])+"\n")
                 print(self[i]["text"])
                 print("\n")
                 print("------")
@@ -54,14 +54,28 @@ class sms(list):
                 
              
     
-    def total(self):
+    def total(self,contact=None):
 
         import pylab as pl
         from collections import Counter
+        import copy
+
+        if contact!=None:
+            database=[]
+            for i in range(len(self)):
+                try:
+                    if self[i]["Contact"].find(contact)!=-1:
+                        database.append(copy.deepcopy(self[i]))
+                except:
+                    pass
+        else:
+            database=copy.deepcopy(self)
+                                  
+
         time=[]
         count=[]
-        for i in range(len(self)):
-            time.append(int(self[i]["Datetime"]))
+        for i in range(len(database)):
+            time.append(int(database[i]["Datetime"]))
 
         timedict=Counter(time)
         time=list(timedict)
