@@ -70,6 +70,7 @@ class sms(list):
         
         pl.figure()
         pl.bar(time,count,color='r',label="TOTAL")
+        pl.ylabel("Number of Messages")
         pl.show()
         
     def srplot(self):
