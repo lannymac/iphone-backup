@@ -232,18 +232,32 @@ class sms(list):
             pl.show()
 
     def export(self):
+        import codecs
         where=raw_input("Where would you like the exported file saved?  ")
-        f=open(where+"smsoutput.txt","w")
+        f=codecs.open(where+"smsoutput.txt","w","utf-8")
         for i in range(len(self)):
-            try:
-                f.write("Sent by: "+self[i]["Sent By"]+" on "+str(self[i]["date"])+"\n")
+            contact=self[i]["Contact"]
+            if contact==None:
+                if self[i]["Address"]!=None:
+                    contact=self[i]["Address"]
+                else:
+                    contact="No one"
+      
+            if self[i]["sr"]=="Sent":
+                f.write("Sent by: YOU, Received by: "+contact+" on "+str(self[i]["Date"])+"\n")
                 f.write("\n")
-                f.write(str(self[i]["text"]))
+                if self[i]["Text"]!=None:
+                    f.write(self[i]["Text"])
                 f.write("\n")
-                f.write(str(i))
                 f.write("----------")
                 f.write("\n")
-            except:
-
-                pass
+            else:
+                f.write("Sent by: "+contact+", Received by: YOU"+" on "+str(self[i]["Date"])+"\n")
+                f.write("\n")
+                if self[i]["Text"]!=None:
+                    f.write(self[i]["Text"])
+                f.write("\n")
+                f.write("----------")
+                f.write("\n")
+            
 
