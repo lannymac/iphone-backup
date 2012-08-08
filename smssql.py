@@ -156,7 +156,7 @@ for i in range(len(sms)):
 
         sms_database.append(tempdict)
 ########
-    elif sms[i][4]==0:
+    elif sms[i][4]==0 and sms[i][29]!=22 and sms[i][26]!=32773:
         tempnum=sms[i][18]
         try:
             tempnum=re.sub("[^0-9]","",tempnum)
@@ -180,7 +180,7 @@ for i in range(len(sms)):
         elif sms[i][26]==12289 or sms[i][26]==77825:
             sr="Received"
         if sms[i][31]==0:
-            date=str(int(sms[i][32])+978307200)
+            date=str(int(sms[i][32]+978307200))
         else:
             date=str(int(sms[i][31]+978307200))
         dt=datetime.fromtimestamp(int(date))
@@ -197,11 +197,10 @@ for i in range(len(sms)):
 
         datedt=todatenum(datetime(year,month,day,hour,minute,sec))
 
-        
         try:
             tempdict={"Text":sms[i][3],"Date":date,"Contact":tempname,"Address":tempnum,"sr":sr,"Datetime":datedt}
         except:
-             tempdict={"Text":sms[i][3],"Date":date,"Contact":None,"Address":sms[i][1],"sr":sr,"Datetime":datedt}
+            tempdict={"Text":sms[i][3],"Date":date,"Contact":None,"Address":sms[i][1],"sr":sr,"Datetime":datedt}
 
         sms_database.append(tempdict)
 
