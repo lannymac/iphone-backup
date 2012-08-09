@@ -55,7 +55,7 @@ class sms(list):
              
     
     def total(self,contact=0):
-
+        from matplotlib import dates
         import pylab as pl
         from collections import Counter
         import copy
@@ -98,10 +98,20 @@ class sms(list):
         time=list(timedict)
         for i in time:
             count.append(timedict[i])
+        dates = dates.num2date(time)
+        fig=pl.figure()
+        ax=fig.add_subplot(111)
         
-        pl.figure()
-        pl.bar(time,count,color='r',label="TOTAL")
-        pl.ylabel("Number of Messages")
+        ax.bar(dates,count,linewidth=0.1)
+        ax.autoscale_view()
+        ax.grid(True)
+        pl.xlabel("Date")
+        pl.ylabel("Messages per day")
+        fig.autofmt_xdate()
+        #pl.figure()
+#        pl.plot_dates(dates, values)
+#        pl.bar(time,count,color='r',label="TOTAL")
+#        pl.ylabel("Number of Messages")
         pl.show()
         
     def srplot(self):
