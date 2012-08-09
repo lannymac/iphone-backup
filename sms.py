@@ -73,6 +73,9 @@ class sms(list):
                 elif self[0][i]["First"]!=None and self[0][i]["Last"]==None:
                     print(str(i)+" - "+self[0][i]["First"])
                     contacts.append(self[0][i]["First"])
+                else:
+                    print(str(i)+" - "+"No contact Name")
+                    contacts.append("No contact name")
             q=raw_input("Enter a number:  ")
             print("Showing texts for only "+contacts[int(q)])
             database=[]
