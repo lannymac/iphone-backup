@@ -102,19 +102,16 @@ class sms(list):
         fig=pl.figure()
         ax=fig.add_subplot(111)
         
-        ax.bar(dates,count,linewidth=0.1)
+        ax.bar(dates,count,linewidth=0.1,color='r')
         ax.autoscale_view()
         ax.grid(True)
         pl.xlabel("Date")
         pl.ylabel("Messages per day")
         fig.autofmt_xdate()
-        #pl.figure()
-#        pl.plot_dates(dates, values)
-#        pl.bar(time,count,color='r',label="TOTAL")
-#        pl.ylabel("Number of Messages")
         pl.show()
         
     def srplot(self):
+        from matplotlib import dates
         from collections import Counter
         import pylab as pl
         senttime=[]
@@ -130,20 +127,39 @@ class sms(list):
 
         senttimedict=Counter(senttime)
         rectimedict=Counter(rectime)
-        senttime=list(senttimedict)
-        rectime=list(rectimedict)
-        for i in senttime:
-            sentcount.append(senttimedict[i])
-        for i in rectime:
-            reccount.append(rectimedict[i])
+        senttimedict=sorted(senttimedict.items())
+        rectimedict=sorted(rectimedict.items())
 
-        pl.figure()
-        pl.plot(senttime,sentcount,'b-',label="Sent")
-        pl.plot(rectime,reccount,'g-',label="Received")
-        pl.xlabel("Time")
+        senttime=[]
+        sentcount=[]
+        rectime=[]
+        reccount=[]
+        for i in range(len(senttimedict)):
+            senttime.append(senttimedict[i][0])
+            sentcount.append(senttimedict[i][1])
+        for i in range(len(rectimedict)):
+            rectime.append(rectimedict[i][0])
+            reccount.append(rectimedict[i][1])
+
+
+
+        datesent = dates.num2date(senttime)
+        daterec = dates.num2date(rectime)
+        fig=pl.figure()
+        ax=fig.add_subplot(111)
+        
+        ax.plot(datesent,sentcount,color='c',label="Sent")
+        ax.autoscale_view()
+        ax.grid(True)
+
         pl.ylabel("Messages per day")
+        fig.autofmt_xdate()
+        ax.plot(daterec,reccount,color='m',label="Recieved")
+        ax.autoscale_view()
+        ax.grid(True)
         pl.legend()
         pl.show()
+
 
     def sr(self):
         import pylab as pl
