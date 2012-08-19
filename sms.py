@@ -35,7 +35,8 @@ class sms(list):
             print("Seny by: "+str(self[i]["Contact"])+"\n"+"Received by: YOU"+" on "+str(self[i]["Date"])+"\n")
             print(self[i]["Text"])
 
-    def daytext(self,contact=None):            
+
+    def daytext(self,constact=None):            
         from datetime import datetime
         date=raw_input("Enter the date you would like to see the texts (format yyyy,mm,dd):  ")
         year=int(date[0:4])
@@ -59,32 +60,10 @@ class sms(list):
         import pylab as pl
         from collections import Counter
         import copy
+        from sms import findcontact
 
         if contact!=0:
-            contacts=[]
-            print("Here is a list of your contacts. Enter the number corresponding to the contact you wish to isolate:  ")
-            for i in range(len(self[0])):
-                if self[0][i]["First"]!=None and self[0][i]["Last"]!=None:
-                    print(str(i)+" - "+self[0][i]["First"]+" "+self[0][i]["Last"])
-                    contacts.append(self[0][i]["First"]+" "+self[0][i]["Last"])
-                elif self[0][i]["First"]==None and self[0][i]["Last"]!=None:
-                    print(str(i)+" - "+self[0][i]["Last"])
-                    contacts.append(self[0][i]["Last"])
-                elif self[0][i]["First"]!=None and self[0][i]["Last"]==None:
-                    print(str(i)+" - "+self[0][i]["First"])
-                    contacts.append(self[0][i]["First"])
-                else:
-                    print(str(i)+" - "+"No contact Name")
-                    contacts.append("No contact name")
-            q=raw_input("Enter a number:  ")
-            print("Showing texts for only "+contacts[int(q)])
-            database=[]
-            for i in range(1,len(self)):
-                try:
-                    if self[i]["Contact"]==contacts[int(q)]:
-                        database.append(copy.deepcopy(self[i]))
-                except:
-                    pass
+            database=findcontact(self)
         else:
             database=copy.deepcopy(self[1:])
                                   
@@ -115,31 +94,9 @@ class sms(list):
         from collections import Counter
         import copy
         import pylab as pl
+
         if contact!=0:
-            contacts=[]
-            print("Here is a list of your contacts. Enter the number corresponding to the contact you wish to isolate:  ")
-            for i in range(len(self[0])):
-                if self[0][i]["First"]!=None and self[0][i]["Last"]!=None:
-                    print(str(i)+" - "+self[0][i]["First"]+" "+self[0][i]["Last"])
-                    contacts.append(self[0][i]["First"]+" "+self[0][i]["Last"])
-                elif self[0][i]["First"]==None and self[0][i]["Last"]!=None:
-                    print(str(i)+" - "+self[0][i]["Last"])
-                    contacts.append(self[0][i]["Last"])
-                elif self[0][i]["First"]!=None and self[0][i]["Last"]==None:
-                    print(str(i)+" - "+self[0][i]["First"])
-                    contacts.append(self[0][i]["First"])
-                else:
-                    print(str(i)+" - "+"No contact Name")
-                    contacts.append("No contact name")
-            q=raw_input("Enter a number:  ")
-            print("Showing texts for only "+contacts[int(q)])
-            database=[]
-            for i in range(1,len(self)):
-                try:
-                    if self[i]["Contact"]==contacts[int(q)]:
-                        database.append(copy.deepcopy(self[i]))
-                except:
-                    pass
+            database=findcontact(self)
         else:
             database=copy.deepcopy(self[1:])
 
@@ -195,30 +152,7 @@ class sms(list):
         from collections import Counter
         import copy
         if contact!=0:
-            contacts=[]
-            print("Here is a list of your contacts. Enter the number corresponding to the contact you wish to isolate:  ")
-            for i in range(len(self[0])):
-                if self[0][i]["First"]!=None and self[0][i]["Last"]!=None:
-                    print(str(i)+" - "+self[0][i]["First"]+" "+self[0][i]["Last"])
-                    contacts.append(self[0][i]["First"]+" "+self[0][i]["Last"])
-                elif self[0][i]["First"]==None and self[0][i]["Last"]!=None:
-                    print(str(i)+" - "+self[0][i]["Last"])
-                    contacts.append(self[0][i]["Last"])
-                elif self[0][i]["First"]!=None and self[0][i]["Last"]==None:
-                    print(str(i)+" - "+self[0][i]["First"])
-                    contacts.append(self[0][i]["First"])
-                else:
-                    print(str(i)+" - "+"No contact Name")
-                    contacts.append("No contact name")
-            q=raw_input("Enter a number:  ")
-            print("Showing texts for only "+contacts[int(q)])
-            database=[]
-            for i in range(1,len(self)):
-                try:
-                    if self[i]["Contact"]==contacts[int(q)]:
-                        database.append(copy.deepcopy(self[i]))
-                except:
-                    pass
+            database=findcontact(self)
         else:
             database=copy.deepcopy(self[1:])
 
@@ -258,30 +192,7 @@ class sms(list):
         from collections import Counter
         import copy
         if contact!=0:
-            contacts=[]
-            print("Here is a list of your contacts. Enter the number corresponding to the contact you wish to isolate:  ")
-            for i in range(len(self[0])):
-                if self[0][i]["First"]!=None and self[0][i]["Last"]!=None:
-                    print(str(i)+" - "+self[0][i]["First"]+" "+self[0][i]["Last"])
-                    contacts.append(self[0][i]["First"]+" "+self[0][i]["Last"])
-                elif self[0][i]["First"]==None and self[0][i]["Last"]!=None:
-                    print(str(i)+" - "+self[0][i]["Last"])
-                    contacts.append(self[0][i]["Last"])
-                elif self[0][i]["First"]!=None and self[0][i]["Last"]==None:
-                    print(str(i)+" - "+self[0][i]["First"])
-                    contacts.append(self[0][i]["First"])
-                else:
-                    print(str(i)+" - "+"No contact Name")
-                    contacts.append("No contact name")
-            q=raw_input("Enter a number:  ")
-            print("Showing texts for only "+contacts[int(q)])
-            database=[]
-            for i in range(1,len(self)):
-                try:
-                    if self[i]["Contact"]==contacts[int(q)]:
-                        database.append(copy.deepcopy(self[i]))
-                except:
-                    pass
+            database=findcontact(self)
         else:
             database=copy.deepcopy(self[1:])
         
@@ -396,3 +307,32 @@ class sms(list):
                 f.write("\n")
             
 
+
+def findcontact(self):
+    from collections import Counter
+    import copy
+    contacts=[]
+    print("Here is a list of your contacts. Enter the number corresponding to the contact you wish to isolate:  ")
+    for i in range(len(self[0])):
+        if self[0][i]["First"]!=None and self[0][i]["Last"]!=None:
+            print(str(i)+" - "+self[0][i]["First"]+" "+self[0][i]["Last"])
+            contacts.append(self[0][i]["First"]+" "+self[0][i]["Last"])
+        elif self[0][i]["First"]==None and self[0][i]["Last"]!=None:
+            print(str(i)+" - "+self[0][i]["Last"])
+            contacts.append(self[0][i]["Last"])
+        elif self[0][i]["First"]!=None and self[0][i]["Last"]==None:
+            print(str(i)+" - "+self[0][i]["First"])
+            contacts.append(self[0][i]["First"])
+        else:
+            print(str(i)+" - "+"No contact Name")
+            contacts.append("No contact name")
+    q=raw_input("Enter a number:  ")
+    print("Showing texts for only "+contacts[int(q)])
+    database=[]
+    for i in range(1,len(self)):
+        try:
+            if self[i]["Contact"]==contacts[int(q)]:
+                database.append(copy.deepcopy(self[i]))
+        except:
+            pass    
+    return database
