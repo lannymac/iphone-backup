@@ -110,20 +110,49 @@ class sms(list):
         fig.autofmt_xdate()
         pl.show()
         
-    def srplot(self):
+    def srplot(self,contact=0):
         from matplotlib import dates
         from collections import Counter
+        import copy
         import pylab as pl
+        if contact!=0:
+            contacts=[]
+            print("Here is a list of your contacts. Enter the number corresponding to the contact you wish to isolate:  ")
+            for i in range(len(self[0])):
+                if self[0][i]["First"]!=None and self[0][i]["Last"]!=None:
+                    print(str(i)+" - "+self[0][i]["First"]+" "+self[0][i]["Last"])
+                    contacts.append(self[0][i]["First"]+" "+self[0][i]["Last"])
+                elif self[0][i]["First"]==None and self[0][i]["Last"]!=None:
+                    print(str(i)+" - "+self[0][i]["Last"])
+                    contacts.append(self[0][i]["Last"])
+                elif self[0][i]["First"]!=None and self[0][i]["Last"]==None:
+                    print(str(i)+" - "+self[0][i]["First"])
+                    contacts.append(self[0][i]["First"])
+                else:
+                    print(str(i)+" - "+"No contact Name")
+                    contacts.append("No contact name")
+            q=raw_input("Enter a number:  ")
+            print("Showing texts for only "+contacts[int(q)])
+            database=[]
+            for i in range(1,len(self)):
+                try:
+                    if self[i]["Contact"]==contacts[int(q)]:
+                        database.append(copy.deepcopy(self[i]))
+                except:
+                    pass
+        else:
+            database=copy.deepcopy(self[1:])
+
         senttime=[]
         sentcount=[]
         rectime=[]
         reccount=[]
 
-        for i in range(1,len(self)):
-            if self[i]["sr"]=="Sent":
-                senttime.append(int(self[i]["Datetime"]))
-            if self[i]["sr"]=="Received":
-                rectime.append(int(self[i]["Datetime"]))
+        for i in range(1,len(database)):
+            if database[i]["sr"]=="Sent":
+                senttime.append(int(database[i]["Datetime"]))
+            if database[i]["sr"]=="Received":
+                rectime.append(int(database[i]["Datetime"]))
 
         senttimedict=Counter(senttime)
         rectimedict=Counter(rectime)
