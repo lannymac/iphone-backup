@@ -63,9 +63,10 @@ class sms(list):
         from sms import findcontact
 
         if contact!=0:
-            database=findcontact(self)
+            database,name=findcontact(self)
         else:
             database=copy.deepcopy(self[1:])
+            name="all contacts"
                                   
 
         time=[]
@@ -87,6 +88,7 @@ class sms(list):
         pl.xlabel("Date")
         pl.ylabel("Messages per day")
         fig.autofmt_xdate()
+        pl.title('Texts sent from '+name)
         pl.show()
         
     def srplot(self,contact=0):
@@ -96,9 +98,10 @@ class sms(list):
         import pylab as pl
 
         if contact!=0:
-            database=findcontact(self)
+            database,name=findcontact(self)
         else:
             database=copy.deepcopy(self[1:])
+            name='all contacts'
 
         senttime=[]
         sentcount=[]
@@ -144,6 +147,7 @@ class sms(list):
         ax.autoscale_view()
         ax.grid(True)
         pl.legend()
+        pl.title('Texts sent from '+name)
         pl.show()
 
 
@@ -152,9 +156,10 @@ class sms(list):
         from collections import Counter
         import copy
         if contact!=0:
-            database=findcontact(self)
+            database,name=findcontact(self)
         else:
             database=copy.deepcopy(self[1:])
+            name='all contacts'
 
         time=[]
         count=[]
@@ -181,6 +186,7 @@ class sms(list):
             sentcount.append(senttimedict[i])
         for i in rectime:
             reccount.append(rectimedict[i])
+        print("Data from "+name)
         print("Total texts SENT over "+str(max(time)-min(time))+" days: "+str(sum(sentcount)))
         print("Average texts SENT per day: "+str(round(sum(sentcount)/float(len(sentcount)),2)))
         print("\n")
@@ -192,9 +198,10 @@ class sms(list):
         from collections import Counter
         import copy
         if contact!=0:
-            database=findcontact(self)
+            database,name=findcontact(self)
         else:
             database=copy.deepcopy(self[1:])
+            name='all contacts'
         
         hours=range(0,24)
         hourcount=[]
@@ -216,26 +223,37 @@ class sms(list):
         pl.xlabel("Hour of the day")
         pl.ylabel("Fraction of total texts")
         pl.xlim(0,24)
+        pl.title("Texts sent from "+name)
         pl.axis('tight')
         pl.show()
-    def monthplot(self):
+    def monthplot(self,contact=0):
         import pylab as pl
+        import copy
+        if contact!=0:
+            database,name=findcontact(self)
+        else:
+            database=copy.deepcopy(self[1:])
+            name='all contacts'
         months=range(1,13)
         monthcount=[]
         for i in range(len(months)):
             monthcount.append(0)
 
-        for i in range(1,len(self)):
-            tempmonth=int(self[i]["Date"][5:7])
+        for i in range(1,len(database)):
+            tempmonth=int(database[i]["Date"][5:7])
             monthcount[tempmonth-1]=monthcount[tempmonth-1]+1
 
+        total_mess=sum(monthcount)
+        for i in range(len(monthcount)):
+            monthcount[i]=monthcount[i]/float(total_mess)
 
         pl.figure()
         pl.bar(months,monthcount)
         #pl.plot(hours,hourcount,'.',linewidth=2)
         pl.xlabel("Month #")
-        pl.ylabel("Sum of texts")
+        pl.ylabel("Fraction of total texts")
         pl.xlim(0,24)
+        pl.title('Texts sent from '+name)
         pl.axis('tight')
         pl.show()
 
@@ -335,4 +353,4 @@ def findcontact(self):
                 database.append(copy.deepcopy(self[i]))
         except:
             pass    
-    return database
+    return database,contacts[int(q)]
