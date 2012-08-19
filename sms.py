@@ -253,23 +253,57 @@ class sms(list):
         print("Total texts RECEIVED over "+str(max(time)-min(time))+" days: "+str(sum(reccount)))
         print("Average texts RECEIVED per day: "+str(round(sum(reccount)/float(len(reccount)),2)))
 
-    def dayplot(self):
+    def dayplot(self,contact=0):
         import pylab as pl
+        from collections import Counter
+        import copy
+        if contact!=0:
+            contacts=[]
+            print("Here is a list of your contacts. Enter the number corresponding to the contact you wish to isolate:  ")
+            for i in range(len(self[0])):
+                if self[0][i]["First"]!=None and self[0][i]["Last"]!=None:
+                    print(str(i)+" - "+self[0][i]["First"]+" "+self[0][i]["Last"])
+                    contacts.append(self[0][i]["First"]+" "+self[0][i]["Last"])
+                elif self[0][i]["First"]==None and self[0][i]["Last"]!=None:
+                    print(str(i)+" - "+self[0][i]["Last"])
+                    contacts.append(self[0][i]["Last"])
+                elif self[0][i]["First"]!=None and self[0][i]["Last"]==None:
+                    print(str(i)+" - "+self[0][i]["First"])
+                    contacts.append(self[0][i]["First"])
+                else:
+                    print(str(i)+" - "+"No contact Name")
+                    contacts.append("No contact name")
+            q=raw_input("Enter a number:  ")
+            print("Showing texts for only "+contacts[int(q)])
+            database=[]
+            for i in range(1,len(self)):
+                try:
+                    if self[i]["Contact"]==contacts[int(q)]:
+                        database.append(copy.deepcopy(self[i]))
+                except:
+                    pass
+        else:
+            database=copy.deepcopy(self[1:])
+        
         hours=range(0,24)
         hourcount=[]
         for i in range(len(hours)):
             hourcount.append(0)
 
-        for i in range(1,len(self)):
-            temphour=int(self[i]["Date"][11:13])
+        for i in range(1,len(database)):
+            temphour=int(database[i]["Date"][11:13])
             hourcount[temphour]=hourcount[temphour]+1
-
+        
+        total_mess=sum(hourcount)
+        for i in range(len(hourcount)):
+            hourcount[i]=hourcount[i]/float(total_mess)
+        
 
         pl.figure()
         pl.bar(hours,hourcount)
         #pl.plot(hours,hourcount,'.',linewidth=2)
         pl.xlabel("Hour of the day")
-        pl.ylabel("Sum of texts")
+        pl.ylabel("Fraction of total texts")
         pl.xlim(0,24)
         pl.axis('tight')
         pl.show()
