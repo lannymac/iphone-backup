@@ -53,7 +53,6 @@ class sms(list):
                 print("------")
                 print("\n")
                 
-             
     
     def total(self,contact=0):
         from matplotlib import dates
@@ -258,19 +257,26 @@ class sms(list):
         pl.show()
 
 
-    def wordfreq(self,word):
+    def wordfreq(self,word,contact=0):
 
         import copy
         import pylab as pl
         from collections import Counter
+        import copy
+        if contact!=0:
+            database,name=findcontact(self)
+        else:
+            database=copy.deepcopy(self[1:])
+            name='all contacts'
+
         word=word.lower()
         if len(word)>0:
             daycount=[]
             count=[]
-            for i in range(1,len(self)):
+            for i in range(len(database)):
                 findnum=0
-                day=int(self[i]["Datetime"])
-                string=copy.deepcopy(self[i]["Text"])
+                day=int(database[i]["Datetime"])
+                string=copy.deepcopy(database[i]["Text"])
                 
 
                 while 1:
@@ -290,7 +296,7 @@ class sms(list):
                 count.append(daydict[i])
 
 
-            print("Average frequency of the word "+word.upper()+" used per day: "+str(round(sum(count)/float(self[-1]["Datetime"]-self[0]["Datetime"]),2)))
+            print("Average frequency of the word "+word.upper()+" used per day: "+str(round(sum(count)/float(database[-1]["Datetime"]-database[0]["Datetime"]),2)))
             pl.figure()
             pl.plot(day,count)
             pl.show()
