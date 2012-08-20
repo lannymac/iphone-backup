@@ -262,6 +262,7 @@ class sms(list):
         import copy
         import pylab as pl
         from collections import Counter
+        from matplotlib import dates
         import copy
         if contact!=0:
             database,name=findcontact(self)
@@ -291,16 +292,25 @@ class sms(list):
                     daycount.append(day)
 
             daydict=Counter(daycount)
-            day=list(daydict)
-            for i in day:
-                count.append(daydict[i])
+            daydict=sorted(daydict.items())
 
+            day=[]
+            count=[]
+            for i in range(len(daydict)):
+                day.append(daydict[i][0])
+                count.append(daydict[i][1])
+            dateplot=dates.num2date(day)
+            fig=pl.figure()
+            ax=fig.add_subplot(111)
+            ax.plot(dateplot,count)
+            ax.autoscale_view()
+            ax.grid(True)
+            fig.autofmt_xdate()
 
-            print("Average frequency of the word "+word.upper()+" used per day: "+str(round(sum(count)/float(database[-1]["Datetime"]-database[0]["Datetime"]),2)))
-            pl.figure()
-            pl.plot(day,count)
+            pl.title('Frequency of the word '+word.upper()+' sent from '+name)
+            pl.ylabel('Word frequency [word/day]')
             pl.show()
-
+            print("Average frequency of the word "+word.upper()+" used per day: "+str(round(sum(count)/float(database[-1]["Datetime"]-database[0]["Datetime"]),2)))
     def export(self):
         import codecs
         where=raw_input("Where would you like the exported file saved?  ")
