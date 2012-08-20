@@ -12,6 +12,7 @@ import sms
 class sms(list):
 
     def name(self,i):
+        '''Prints the name of who sent message # i'''
         print(self[i]["Contact"])
 
     def text(self,i):
@@ -36,25 +37,43 @@ class sms(list):
             print(self[i]["Text"])
 
 
-    def daytext(self,constact=None):            
+    def daytext(self,contact=0):            
+        '''This will print all texts from a certain date entered'''
+
         from datetime import datetime
+        import copy
         date=raw_input("Enter the date you would like to see the texts (format yyyy,mm,dd):  ")
+        #change the date entered into datetime format
         year=int(date[0:4])
         month=int(date[5:7])
         day=int(date[8:10])
         datedt=datetime(year,month,day,0,0,0)
         finaldate=datedt.toordinal()
-        
-        for i in range(1,len(self)):
-            if int(self[i]["datetime"])==finaldate:
-                print("Sent by: "+sent[i]["Sent By"]+" at "+str(self[i]["date"][11:])+"\n")
-                print(self[i]["text"])
-                print("\n")
-                print("------")
-                print("\n")
+
+        #Go through the entire database or just search through for a certain contact
+        if contact!=0:
+            database,name=findcontact(self)
+        else:
+            database=copy.deepcopy(self[1:])
+            name="all contacts"
+        #go through entire database
+        for i in range(len(database)):
+            if int(database[i]["Datetime"])==finaldate: #check to make sure that the days match up
+                if database[i]["sr"]=='Received':#check if received, then print to the screen
+                    print("Sent by: "+database[i]["Contact"]+", Received by: you at "+str(database[i]["Date"][11:])+"\n")
+                    print(database[i]["Text"])
+                    print("\n")
+                    print("------")
+                    print("\n")
+                if database[i]["sr"]=='Sent':#check if sent, then print to the screen
+                    print("Sent by: you, Received by: "+database[i]["Contact"]+" at "+str(database[i]["Date"][11:])+"\n")
+                    print(database[i]["Text"])
+                    print("\n")
+                    print("------")
+                    print("\n")
                 
     
-    def total(self,contact=0):
+    def total(self,contact=0):        
         from matplotlib import dates
         import pylab as pl
         from collections import Counter
