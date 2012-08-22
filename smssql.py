@@ -71,7 +71,7 @@ q3=raw_input("Enter the number corresponding to the backup folder you would like
 
 os.system("cp /Users/landan/Library/Application\ Support/MobileSync/Backup/"+backupdirs[int(q3)]+\
 "/3d0d7e5fb2ce288813306e4d4636395e047a3d28 "+str(q5)+"sms.db")
-smsDB= sqlite3.connect("DataBaseFiles/sms.db")
+smsDB= sqlite3.connect(q5+"sms.db")
 
 with smsDB:
     cur = smsDB.cursor()
@@ -84,7 +84,7 @@ with smsDB:
 os.system("cp /Users/landan/Library/Application\ Support/MobileSync/Backup/"+backupdirs[int(q3)]+\
 "/31bb7ba8914766d4ba40d6dfb6113c8b614be442 "+str(q5)+"contacts.db")
 
-Addy=sqlite3.connect("DataBaseFiles/contacts.db")
+Addy=sqlite3.connect(q5+"contacts.db")
 with Addy:
     cur = Addy.cursor()
     cur.execute("SELECT * FROM ABPerson")
@@ -231,24 +231,27 @@ for i in range(len(sms)):
 
 if databaseq=='y':
     newtime=0
-    for i in range(len(smsdb)):
+    for i in range(1,len(smsdb)):
         temptime=smsdb[i]["Datetime"]
         if temptime>newtime:
             newtime=temptime
 
-    for i in range(len(sms_database)):
+    for i in range(1,len(sms_database)):
         if sms_database[i]["Datetime"]>newtime:
             smsdb.append(sms_database[i])
 
     smsdb=smsclass(smsdb)
     
+    q6=raw_input("Would you like to re-save the updated database to the same location and file name? y/n")
+    if q6=='y':
+        pickle.dump(smsdb,open(q1a,'wb'))
 
 if databaseq=='n':
     smsdb=smsclass(sms_database)
-q4=raw_input("Would you like to pickle this database for future use? (y/n):  ")
-if q4 == 'y':      
-    q2=raw_input("Enter the location where you would like the database file pickled:\n")
-    pickle.dump(smsdb,open(q2,'wb'))
+    q4=raw_input("Would you like to pickle this database for future use? (y/n):  ")
+    if q4 == 'y':      
+        q2=raw_input("Enter the location where you would like the database file pickled:\n")
+        pickle.dump(smsdb,open(q2,'wb'))
 
 print("\nAlright! You're all done! The variable *smsdb* is the database. You can \
 now perform some neat little functions on it. They are all listed in sms.py. You \
