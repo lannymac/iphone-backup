@@ -330,31 +330,41 @@ class sms(list):
             pl.ylabel('Word frequency [word/day]')
             pl.show()
             print("Average frequency of the word "+word.upper()+" used per day: "+str(round(sum(count)/float(database[-1]["Datetime"]-database[0]["Datetime"]),2)))
-    def export(self):
+    def export(self,contact=0):
         import codecs
+        import copy
         where=raw_input("Where would you like the exported file saved?  ")
-        f=codecs.open(where+"smsoutput.txt","w","utf-8")
-        for i in range(1,len(self)):
-            contact=self[i]["Contact"]
+
+        if contact!=0:
+            database,name=findcontact(self)
+            name=name.replace(' ','_')
+        else:
+            database=copy.deepcopy(self[1:])
+            name='all_contacts'
+
+        f=codecs.open(where+"sms_"+name+".txt","w","utf-8")
+
+        for i in range(len(database)):
+            contact=database[i]["Contact"]
             if contact==None:
-                if self[i]["Address"]!=None:
-                    contact=self[i]["Address"]
+                if database[i]["Address"]!=None:
+                    contact=database[i]["Address"]
                 else:
                     contact="No one"
       
-            if self[i]["sr"]=="Sent":
-                f.write("Sent by: YOU, Received by: "+contact+" on "+str(self[i]["Date"])+"\n")
+            if database[i]["sr"]=="Sent":
+                f.write("Sent by: YOU, Received by: "+contact+" on "+str(database[i]["Date"])+"\n")
                 f.write("\n")
-                if self[i]["Text"]!=None:
-                    f.write(self[i]["Text"])
+                if database[i]["Text"]!=None:
+                    f.write(database[i]["Text"])
                 f.write("\n")
                 f.write("----------")
                 f.write("\n")
             else:
-                f.write("Sent by: "+contact+", Received by: YOU"+" on "+str(self[i]["Date"])+"\n")
+                f.write("Sent by: "+contact+", Received by: YOU"+" on "+str(database[i]["Date"])+"\n")
                 f.write("\n")
-                if self[i]["Text"]!=None:
-                    f.write(self[i]["Text"])
+                if database[i]["Text"]!=None:
+                    f.write(database[i]["Text"])
                 f.write("\n")
                 f.write("----------")
                 f.write("\n")
