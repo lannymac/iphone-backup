@@ -369,7 +369,50 @@ class sms(list):
                 f.write("----------")
                 f.write("\n")
             
+    def fft(self,contact=0):
+        import scipy
+        import scipy.fftpack
+        import copy
+        from collections import Counter
+        import numpy as np
+        import pylab as pl
+        if contact!=0:
+            database,name=findcontact(self)
+            name=name.replace(' ','_')
+        else:
+            database=copy.deepcopy(self[1:])
+            name='all_contacts'
 
+        time=[]
+        count=[]
+        
+
+        for i in range(0,len(database)):
+           time.append(int(database[i]["Datetime"]))
+
+        timedict=Counter(time)
+        timedict=sorted(timedict.items())
+
+        time=[]
+        count=[]
+        for i in range(len(timedict)):
+            time.append(timedict[i][0])
+            count.append(timedict[i][1])
+        
+
+        count=np.array(count)
+        FFT=abs(scipy.fft(count))
+        freqs=scipy.fftpack.fftfreq(count.size, 1)
+        
+        fig=pl.figure()
+        ax=fig.add_subplot(211)
+        ax.plot(time,count)
+        ax2=fig.add_subplot(212)
+        ax2.plot(freqs,20*scipy.log10(FFT),'x')
+        pl.show()
+        
+
+        
 
 def findcontact(self):
     from collections import Counter
@@ -399,3 +442,4 @@ def findcontact(self):
         except:
             pass    
     return database,contacts[int(q)]
+
