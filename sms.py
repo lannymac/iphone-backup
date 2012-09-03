@@ -376,6 +376,7 @@ class sms(list):
         from collections import Counter
         import numpy as np
         import pylab as pl
+        from datetime import datetime
         if contact!=0:
             database,name=findcontact(self)
             name=name.replace(' ','_')
@@ -386,10 +387,11 @@ class sms(list):
         time=[]
         count=[]
         
-
+        
         for i in range(0,len(database)):
-           time.append(int(database[i]["Datetime"]))
-
+            tempdate=database[i]["Date"]
+            time.append(datetime(int(tempdate[0:4]),int(tempdate[5:7]),int(tempdate[8:10]),int(tempdate[11:13]),int(tempdate[14:16]),int(tempdate[17:19]),0).timetuple().tm_yday)
+            
         timedict=Counter(time)
         timedict=sorted(timedict.items())
 
