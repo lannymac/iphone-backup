@@ -3,4 +3,4 @@ This program will read in the sql database made by iTunes during an iPhone backu
 Use smssql.py to retrieve the database files and sms.py and sms class to perform statistics.
 
 TO DO:
--Make every method in the sms class able to give data for one specific contact. Only sms.total is done so far.
+-Fix sms.fft to work properly. I really cannot figure it out to work with my data.
